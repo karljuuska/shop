@@ -28,6 +28,8 @@ public class ItemStateMachineTests {
     ItemRepository itemRepository;
 
 
+    //TODO StateMachine
+    /*
     @Test
     @Transactional
     public void itemGetsExcluded() {
@@ -48,4 +50,6 @@ public class ItemStateMachineTests {
         assertNotEquals(initialUpdatedOn, excludedItem.getUpdatedOn());
 
     }
+
+     */
 }

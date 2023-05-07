@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: Shop API
+  version: 1.0.0
+  description: |
+    Shop test system
+
+servers:
+  - url: http://localhost:8080/
+    description: Local development server
+
+externalDocs:
+  url: https://swagger.io/specification/
+  description: Find more information about OAS3.0 standard.
+
+tags:
+  - name: Item
+    description: API for services related shop transactions.
+
+paths:
+  /items:
+    post:
+      operationId: addItem
+      tags:
+        - Item
+      summary: Submits new item.
+      description: Submits a new item and instantiates it with a new state.
+      requestBody:
+        description: A new item information.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '201':
+          description: Successfully submitted item returns an instance with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Server was unable to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: The request body contains an unprocessable entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: getItems
+      tags:
+        - Item
+      summary: Queries all items.
+      description: Selects all items stored in database and returns them as an array.
+      responses:
+        '200':
+          description: Successful query returns an array of items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    put:
+      operationId: updateItems
+      tags:
+        - Item
+      summary: Updates every item.
+      description: Finds and updates items in the database.
+      requestBody:
+        description: Items with updated values.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Item'
+      responses:
+        '201':
+          description: Update was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+        '404':
+          description: Item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Server was unable to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: The request body contains an unprocessable entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred while updating items.
+
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - itemName
+        - itemType
+        - itemPrice
+        - itemAmount
+      properties:
+        id:
+          type: integer
+        itemName:
+          type: string
+        itemState:
+          $ref: '#/components/schemas/ItemState'
+        itemType:
+          $ref: '#/components/schemas/ItemType'
+        itemPrice:
+          type: number
+          format: double
+        itemAmount:
+          type: integer
+        updatedOn:
+          type: string
+          format: date-time
+
+    ItemType:
+      type: string
+      enum:
+        - Food
+        - Garment
+        - Other
+
+    ItemState:
+      type: string
+      enum:
+        - Available
+        - Unavailable
+
+    ErrorResponse:
+      type: object
+      required:
+        - uniqueId
+        - message
+      properties:
+        uniqueId:
+          type: string
+        message:
+          type: string
+
+  parameters:
+    ItemId:
+      name: itemId
+      in: path
+      description: ID of item
+      required: true
+      schema:
+        type: integer

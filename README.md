@@ -8,3 +8,10 @@ Database is initialized in the local runtime. On the shutdown, the database is t
 
 
 ### For Windows users
+
+Run database and app.jar:
+1. docker-compose up
+
+Run application: 
+1. ./gradlew build
+2. ./gradlew bootRun
